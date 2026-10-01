@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MC Creations — Gnome Welcome Sign</title>
+<title>MC Creations — Gnome Interchangeable</title>
 <style>
    :root{
     --cream:#faf5f0;
@@ -24,7 +24,7 @@
   }
   .wrap{ max-width:700px; margin:0 auto; padding:20px 16px 40px; }
 
-  h1.pageTitle{ text-align:center; font-size:26px; font-weight:700; margin:6px 0 4px; }
+  h1.pageTitle{ text-align:center; font-size:28px; font-weight:600; margin:6px 0 4px; }
   p.pageSub{ text-align:center; font-size:14px; color:var(--terracotta); margin:0 0 20px; }
 
   .cartToggle{
@@ -87,7 +87,7 @@
     text-align:center;
     font-size:12px;
     font-weight:700;
-    color:var(--terracotta);
+    color:var(--brown);
     text-transform:uppercase;
     letter-spacing:1px;
     margin:10px 0 2px;
@@ -145,7 +145,7 @@
 
 <div class="wrap">
 
-  <button class="cartToggle" id="cartToggle">🛒 Your Order (0 items) — tap to view</button>
+  <button class="cartToggle" id="cartToggle">🛒 Your Cart (0 items) — tap to view</button>
 
   <div class="cartBox" id="cartBox">
     <div class="cartBoxInner">
@@ -175,11 +175,11 @@
     </div>
   </div>
 
-  <h1 class="pageTitle">Gnome Welcome Sign</h1>
+  <h1 class="pageTitle">Gnome Interchangeable</h1>
   <p class="pageSub">The Full Set comes with all 10 arm attachments shown below</p>
 
   <div class="previewBox">
-    <img id="previewImg" src="URL_BACKER_MAIN" alt="Gnome Welcome Sign">
+    <img id="previewImg" src="URL_BACKER_MAIN" alt="Gnome Interchangeable">
     <div class="previewLabel">Currently Selected: <span id="previewLabelName">Snowflake</span></div>
   </div>
 
@@ -255,7 +255,7 @@ function loadCart() {
 }
 
 function addFullSet() {
-  fullSets.push({ name: "Gnome Welcome Sign — Full Set", price: FULL_SET_PRICE });
+  fullSets.push({ name: "Gnome Interchangeable — Full Set", price: FULL_SET_PRICE });
   saveCart();
   updateCartDisplay();
 }
@@ -371,7 +371,7 @@ document.getElementById("cartCopyBtn").onclick = () => {
     showCartMessage("Your order is empty — add something first!");
     return;
   }
-  const fullMessage = `Hi!\nMy name is ________.\nI'm interested in placing an order for a Gnome Welcome Sign!\n\nHere's what I picked out:\n${text}\n\n(Feel free to add any additional details or questions here!)\n\nThank you! 🤍`;
+  const fullMessage = `Hi!\nMy name is ________.\nI'm interested in placing an order for a Gnome Interchangeable!\n\nHere's what I picked out:\n${text}\n\n(Feel free to add any additional details or questions here!)\n\nThank you! 🤍`;
   navigator.clipboard.writeText(fullMessage).then(() => {
     showCartMessage("Copied! Paste into your message 💬");
   }).catch(() => {
@@ -383,7 +383,7 @@ document.getElementById("cartCopyBtn").onclick = () => {
     document.body.removeChild(textarea);
     showCartMessage("Copied! Paste into your message 💬");
   });
-  document.getElementById("cartEmailLink").href = "mailto:?subject=" + encodeURIComponent("Gnome Welcome Sign Order Request") + "&body=" + encodeURIComponent(fullMessage);
+  document.getElementById("cartEmailLink").href = "mailto:?subject=" + encodeURIComponent("Gnome Interchangeable Order Request") + "&body=" + encodeURIComponent(fullMessage);
   document.getElementById("cartTextLink").href = "sms:?body=" + encodeURIComponent(fullMessage);
 };
 
