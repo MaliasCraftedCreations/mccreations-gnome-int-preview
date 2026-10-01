@@ -92,6 +92,10 @@
     width:calc(100% - 12px); margin:0 6px 8px; background:var(--blush); color:var(--brown);
     border:none; padding:6px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer;
   }
+    .armCard.active-arm{
+    border-color:var(--terracotta);
+    box-shadow:0 0 0 2px var(--terracotta) inset;
+  }
 
   .toast{
     position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
@@ -128,15 +132,10 @@
     <div class="previewLabel" id="previewLabel">Snowflake</div>
   </div>
 
-  <div class="thumbRow" id="fullSetThumbs"></div>
-
-  <button class="addFullSetBtn" id="addFullSetBtn">➕ Add The Full Set to Order — $100.00</button>
-
-  <div class="sectionDivider">— or —</div>
-  <h2 class="sectionTitle">Order Individual Arm Attachments</h2>
-  <p class="sectionSub">Replacements from the set, or one of our custom extras — priced and added separately</p>
-
+  <p class="sectionSub" style="margin-top:4px;">Tap any arm below to preview it on the sign</p>
   <div class="armGrid" id="armGrid"></div>
+
+  <button class="addFullSetBtn" id="actionBtn"></button>
 
 </div>
 
@@ -149,37 +148,28 @@
    it has no effect on price, since all 10 are already included.
    Replace the image URLs with your real photos.
    ================================================================ */
-const FULL_SET_ARMS = [
-  { name: "Snowflake",      image: "URL_SET_SNOWFLAKE" },
-  { name: "Heart",          image: "URL_SET_HEART" },
-  { name: "Easter Egg",     image: "URL_SET_EASTEREGG" },
-  { name: "Clover",         image: "URL_SET_CLOVER" },
-  { name: "American Flag",  image: "URL_SET_FLAG" },
-  { name: "Watermelon",     image: "URL_SET_WATERMELON" },
-  { name: "Sunflower",      image: "URL_SET_SUNFLOWER" },
-  { name: "Pumpkin",        image: "URL_SET_PUMPKIN" },
-  { name: "Ghost",          image: "URL_SET_GHOST" },
-  { name: "Christmas Tree", image: "URL_SET_TREE" }
+const ARMS = [
+  { name: "Snowflake",      image: "URL_SET_SNOWFLAKE",  type: "set" },
+  { name: "Heart",          image: "URL_SET_HEART",  type: "set" },
+  { name: "Easter Egg",     image: "URL_SET_EASTEREGG",  type: "set" },
+  { name: "Clover",         image: "URL_SET_CLOVER",  type: "set" },
+  { name: "American Flag",  image: "URL_SET_FLAG",  type: "set" },
+  { name: "Watermelon",     image: "URL_SET_WATERMELON",  type: "set" },
+  { name: "Sunflower",      image: "URL_SET_SUNFLOWER",  type: "set" },
+  { name: "Pumpkin",        image: "URL_SET_PUMPKIN",  type: "set" },
+  { name: "Ghost",          image: "URL_SET_GHOST",  type: "set" },
+  { name: "Christmas Tree", image: "URL_SET_TREE",  type: "set" },
 
+  { name: "Turkey",                  image: "URL_ARM_TURKEY",    type: "individual", price: 15 },
+  { name: "Pencil",                  image: "URL_ARM_PENCIL",    type: "individual", price: 15 },
+  { name: "Witch Hat",               image: "URL_ARM_WITCHHAT",  type: "individual", price: 15 },
+  { name: "Flip Flops",              image: "URL_ARM_FLIPFLOPS", type: "individual", price: 15 },
+  { name: "Snowflake (Replacement)", image: "URL_SET_SNOWFLAKE", type: "individual", price: 15 },
+  { name: "Pumpkin (Replacement)",   image: "URL_SET_PUMPKIN",   type: "individual", price: 15 }
+];
 ];
 const FULL_SET_PRICE = 100;
-
-/* ================================================================
-   INDIVIDUAL ARM ATTACHMENTS — sold on their own, always at their
-   own price, never bundled into the Full Set price. This includes
-   replacements of set arms (in case one breaks) AND fully custom
-   extras. Prices below are placeholders — update to your real ones.
-   Copy one block to add more.
-   ================================================================ */
-const INDIVIDUAL_ARMS = [
-  { name: "Turkey",      image: "URL_ARM_TURKEY",   price: 12 },
-  { name: "Pencil",      image: "URL_ARM_PENCIL",   price: 12 },
-  { name: "Witch Hat",   image: "URL_ARM_WITCHHAT", price: 12 },
-  { name: "Flip Flops",  image: "URL_ARM_FLIPFLOPS",price: 12 },
-  // Replacement versions of the set arms, sold individually:
-  { name: "Snowflake (Replacement)",  image: "URL_SET_SNOWFLAKE",  price: 12 },
-  { name: "Pumpkin (Replacement)",    image: "URL_SET_PUMPKIN",    price: 12 }
-];
+let currentSelection = ARMS[0];
 
 /* ================================================================
    CART — persists across reloads using its own storage key, kept
@@ -325,52 +315,50 @@ function showToast(msg) {
 /* ================================================================
    RENDER: Full Set preview thumbnails (visual only, no pricing)
    ================================================================ */
-function renderFullSetThumbs() {
-  const row = document.getElementById("fullSetThumbs");
-  row.innerHTML = "";
-  FULL_SET_ARMS.forEach((arm, i) => {
-    const img = document.createElement("img");
-    img.src = arm.image;
-    img.title = arm.name;
-    if (i === 0) img.classList.add("active-thumb");
-    img.onclick = () => {
-      document.getElementById("previewImg").src = arm.image;
-      document.getElementById("previewLabel").textContent = arm.name;
-      row.querySelectorAll("img").forEach(t => t.classList.remove("active-thumb"));
-      img.classList.add("active-thumb");
-    };
-    row.appendChild(img);
-  });
-}
-
-/* ================================================================
-   RENDER: Individual arm attachment grid
-   ================================================================ */
 function renderArmGrid() {
   const grid = document.getElementById("armGrid");
   grid.innerHTML = "";
-  INDIVIDUAL_ARMS.forEach(arm => {
+  ARMS.forEach((arm, i) => {
     const card = document.createElement("div");
-    card.className = "armCard";
+    card.className = "armCard" + (i === 0 ? " active-arm" : "");
+    const badge = arm.type === "set" ? "Included in Set" : `$${arm.price.toFixed(2)}`;
     card.innerHTML = `
       <img src="${arm.image}" alt="${arm.name}">
       <div class="armCard-label">${arm.name}</div>
-      <div class="armCard-price">$${arm.price.toFixed(2)}</div>
-      <button class="armCard-addBtn">Add to Order</button>
+      <div class="armCard-price">${badge}</div>
     `;
-    card.querySelector(".armCard-addBtn").onclick = () => addExtraArm(arm.name, arm.price);
+    card.onclick = () => selectArm(arm, card);
     grid.appendChild(card);
   });
 }
 
-document.getElementById("addFullSetBtn").onclick = addFullSet;
+function selectArm(arm, cardEl) {
+  currentSelection = arm;
+  document.getElementById("previewImg").src = arm.image;
+  document.getElementById("previewLabel").textContent = arm.name;
+  document.querySelectorAll(".armCard").forEach(c => c.classList.remove("active-arm"));
+  if (cardEl) cardEl.classList.add("active-arm");
+  updateActionButton();
+}
+
+function updateActionButton() {
+  const btn = document.getElementById("actionBtn");
+  if (currentSelection.type === "set") {
+    btn.textContent = `➕ Add The Full Set to Order — $${FULL_SET_PRICE.toFixed(2)}`;
+    btn.onclick = addFullSet;
+  } else {
+    btn.textContent = `➕ Add ${currentSelection.name} to Order — $${currentSelection.price.toFixed(2)}`;
+    btn.onclick = () => addExtraArm(currentSelection.name, currentSelection.price);
+  }
+}
+
 
 /* ================================================================
    INIT
    ================================================================ */
 loadCart();
-renderFullSetThumbs();
 renderArmGrid();
+updateActionButton();
 updateCartDisplay();
 </script>
 </body>
