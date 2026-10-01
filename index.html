@@ -18,9 +18,11 @@
    --black:#000;
   }
   *{ box-sizing:border-box; }
+  html,body,.wrap,.wrap *{
+    font-family: Arial, sans-serif !important;
+  }
   html,body{
     margin:0; padding:0; overflow-x:hidden;
-     font-family: Arial, sans-serif;
     color:var(--brown);
     background:transparent;
   }
@@ -128,8 +130,8 @@
   .armGrid{ display:flex; flex-wrap:wrap; justify-content:center; gap:16px; }
   .armCard{ width:80px; text-align:center; cursor:pointer; }
  .armCard img{ width:100%; aspect-ratio:1/1; object-fit:contain; background:transparent; display:block; }
-  .armCard-label{ font-size:12px; font-weight:600; padding-top:4px; line-height:1.2; }
-  .armCard-price{ font-size:12px; color:var(--terracotta); margin-bottom:6px; }
+   .armCard-label{ font-size:12px; font-weight:600; padding-top:4px; line-height:1.2; color:var(--black); }
+  .armCard-price{ font-size:12px; color:var(--brown); margin-bottom:6px; min-height:14px; }
   .armCard-addBtn{
     width:calc(100% - 12px); margin:0 6px 8px; background:var(--blush); color:var(--brown);
     border:none; padding:6px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer;
@@ -257,6 +259,12 @@ function showCartMessage(msg) {
   el.textContent = msg;
   el.style.opacity = "1";
   el.style.transform = "translateY(0)";
+
+  const box = document.getElementById("cartBox");
+  if (box.classList.contains("open")) {
+    box.style.maxHeight = box.scrollHeight + "px";
+  }
+
   setTimeout(() => {
     el.style.opacity = "0";
     el.style.transform = "translateY(8px)";
@@ -422,8 +430,8 @@ function renderArmGrid() {
 
     const card = document.createElement("div");
     card.className = "armCard" + (i === 0 ? " active-arm" : "");
-    const badge = arm.type === "set" ? "Included in Set" : `$${arm.price.toFixed(2)}`;
-    card.innerHTML = `
+    const badge = arm.type === "set" ? "Included in Set" : "";
+     card.innerHTML = `
       <img src="${arm.image}" alt="${arm.name}">
       <div class="armCard-label">${arm.name}</div>
       <div class="armCard-price">${badge}</div>
