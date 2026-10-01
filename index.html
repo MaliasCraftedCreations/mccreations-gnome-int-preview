@@ -31,11 +31,35 @@
     background:var(--blush); color:var(--brown); border:none; cursor:pointer;
     display:block; margin:0 auto 14px; max-width:420px; text-align:center;
   }
-  .cartBox{
-    max-height:0; overflow:hidden; transition:max-height 0.3s ease;
-    max-width:500px; margin:0 auto 14px; border-radius:12px;
-    background:var(--blush-dark); border:2px dashed #c89f8d; color:var(--brown); font-size:14px;
-  }
+  
+  <div class="cartBox" id="cartBox">
+    <div class="cartBoxInner">
+      <strong>Your Order Selections:</strong>
+      <div id="cartList" style="margin-top:8px;"></div>
+      <div class="cartTotalRow" id="cartTotalRow" style="display:none;"></div>
+
+      <div class="cartDivider"></div>
+
+      <div class="readyHeading">Ready to order? Here's how! 👇</div>
+      <div class="readyWarning">Important: Please do not send screenshots ❗</div>
+      <div class="readySteps">
+        1. Tap "Copy Order"<br>
+        2. Choose Email, Text, Instagram, or Facebook<br>
+        3. Paste your order into the message 💬<br>
+        4. Send it to us!
+      </div>
+
+      <button class="cartCopyBtn" id="cartCopyBtn">📋 Copy Order</button>
+
+      <div class="cartLinksRow">
+        <a href="#" id="cartEmailLink" target="_blank">Email</a> •
+        <a href="#" id="cartTextLink">Text</a> •
+        <a href="https://www.instagram.com/maliascraftedcreations/" target="_blank">Instagram</a> •
+        <a href="https://www.facebook.com/share/18Pufov4T5/?mibextid=wwXIfr" target="_blank">Facebook</a>
+      </div>
+    </div>
+  </div>
+  
   .cartBox.open{ max-height:700px; }
   .cartBoxInner{ padding:12px 16px; }
   .cartItem{
@@ -47,12 +71,20 @@
   .cartEmptyMsg{ font-size:13px; text-align:center; padding:10px 0; }
   .cartTotalRow{ margin-top:10px; padding-top:8px; border-top:1px dashed var(--terracotta); font-weight:700; text-align:center; }
   .cartDisclaimer{ font-weight:400; font-size:11px; color:#8b5e4f; margin-top:2px; }
+  .cartDivider{ border-top:1px dashed var(--terracotta); margin:10px 0; }
+  .readyHeading{ text-align:center; font-weight:700; margin:4px 0; }
+  .readyWarning{ text-align:center; font-weight:700; color:#b5333a; margin:4px 0 10px; }
+  .readySteps{ text-align:center; font-weight:700; font-size:13px; line-height:1.6; margin-bottom:10px; }
   .cartCopyBtn{
-    width:100%; background:var(--terracotta); color:var(--white); border:none;
-    padding:10px; border-radius:14px; font-size:13px; font-weight:700; cursor:pointer; margin-top:8px;
+    display:block; width:auto; max-width:180px; margin:10px auto 0;
+    background:var(--terracotta); color:var(--white); border:none;
+    padding:10px 24px; border-radius:20px; font-size:14px; font-weight:700; cursor:pointer;
   }
-  .cartContactRow{ display:flex; justify-content:center; gap:14px; margin-top:10px; font-size:13px; }
-  .cartContactRow a{ color:var(--brown); text-decoration:none; font-weight:600; }
+  .cartLinksRow{ text-align:center; margin-top:10px; font-size:13px; }
+  .cartLinksRow a{ color:#8b5e4f; text-decoration:underline; font-weight:400; margin:0 4px; }
+  .cartPairedRow{
+    font-size:12px; color:#6b4a3d; margin:2px 0 8px 18px;
+  }
 
   .previewBox{
     background:var(--white); border:1px solid var(--line); border-radius:16px;
@@ -126,13 +158,13 @@
 
   <div class="previewBox">
     <img id="previewImg" src="URL_BACKER_MAIN" alt="Gnome Welcome Sign">
-    <div class="previewLabel" id="previewLabel">Snowflake</div>
+    <div class="previewLabel">Currently Selected: <span id="previewLabelName">Snowflake</span></div>
   </div>
+
+  <button class="addFullSetBtn" id="actionBtn"></button>
 
   <p class="sectionSub" style="margin-top:4px;">Tap any arm below to preview it on the sign</p>
   <div class="armGrid" id="armGrid"></div>
-
-  <button class="addFullSetBtn" id="actionBtn"></button>
 
 </div>
 
@@ -197,14 +229,12 @@ function addFullSet() {
   fullSets.push({ name: "Gnome Welcome Sign — Full Set", price: FULL_SET_PRICE });
   saveCart();
   updateCartDisplay();
-  showToast("Full Set added to your order 🛒");
 }
 
 function addExtraArm(name, price) {
   extraArms.push({ name: name, price: price });
   saveCart();
   updateCartDisplay();
-  showToast(name + " added to your order 🛒");
 }
 
 function removeFromCart(index) {
@@ -245,15 +275,33 @@ function updateCartDisplay() {
   toggle.textContent = `🛒 Your Order (${combined.length} item${combined.length === 1 ? "" : "s"}) — tap to view`;
 
   list.innerHTML = "";
+
   if (combined.length === 0) {
-    list.innerHTML = '<div class="cartEmptyMsg">No items yet — add the Full Set or an individual arm above.</div>';
+    list.innerHTML = '<div class="cartEmptyMsg">No items yet — tap any arm above and add it to your order.</div>';
   } else {
-    combined.forEach((item, i) => {
+    fullSets.forEach((item, i) => {
       const row = document.createElement("div");
       row.className = "cartItem";
       row.innerHTML = `
         <span>${item.name} — $${item.price.toFixed(2)}</span>
         <span class="cartItem-remove" onclick="removeFromCart(${i})">✕</span>
+      `;
+      list.appendChild(row);
+
+      ARMS.filter(a => a.type === "set").forEach(a => {
+        const pairedRow = document.createElement("div");
+        pairedRow.className = "cartPairedRow";
+        pairedRow.innerHTML = `↳ ${a.name} (included)`;
+        list.appendChild(pairedRow);
+      });
+    });
+
+    extraArms.forEach((item, i) => {
+      const row = document.createElement("div");
+      row.className = "cartItem";
+      row.innerHTML = `
+        <span>${item.name} — $${item.price.toFixed(2)}</span>
+        <span class="cartItem-remove" onclick="removeFromCart(${fullSets.length + i})">✕</span>
       `;
       list.appendChild(row);
     });
@@ -270,13 +318,19 @@ function updateCartDisplay() {
   }
 
   const box = document.getElementById("cartBox");
-  if (combined.length > 0 && box.classList.contains("open")) {
+  if (combined.length > 0) {
+    box.classList.add("open");
     box.style.maxHeight = box.scrollHeight + "px";
+  } else {
+    box.classList.remove("open");
+    box.style.maxHeight = "0px";
   }
 }
 
 document.getElementById("cartToggle").onclick = () => {
   const box = document.getElementById("cartBox");
+  const hasItems = (fullSets.length + extraArms.length) > 0;
+  if (hasItems && box.classList.contains("open")) return;
   box.classList.toggle("open");
   box.style.maxHeight = box.classList.contains("open") ? box.scrollHeight + "px" : "0px";
 };
@@ -333,7 +387,7 @@ function renderArmGrid() {
 function selectArm(arm, cardEl) {
   currentSelection = arm;
   document.getElementById("previewImg").src = arm.image;
-  document.getElementById("previewLabel").textContent = arm.name;
+  document.getElementById("previewLabelName").textContent = arm.name;
   document.querySelectorAll(".armCard").forEach(c => c.classList.remove("active-arm"));
   if (cardEl) cardEl.classList.add("active-arm");
   updateActionButton();
