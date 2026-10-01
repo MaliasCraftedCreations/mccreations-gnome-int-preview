@@ -46,6 +46,13 @@
   }
   .cartItem:last-child{ border-bottom:none; }
   .cartItem-remove{ border:none; background:none; color:var(--brown); font-weight:700; cursor:pointer; font-size:15px; }
+    .cartItemNoBorder{
+    display:flex; justify-content:space-between; align-items:center; padding:8px 0; font-size:13px;
+  }
+  .cartPairedRowLast{
+    border-bottom:1px dashed var(--terracotta);
+    padding-bottom:8px;
+  }
   .cartEmptyMsg{ font-size:13px; text-align:center; padding:10px 0; }
   .cartTotalRow{ margin-top:10px; padding-top:8px; border-top:1px dashed var(--terracotta); font-weight:700; text-align:center; }
   .cartDisclaimer{ font-weight:400; font-size:11px; color:#8b5e4f; margin-top:2px; }
@@ -62,6 +69,22 @@
   .cartLinksRow a{ color:#8b5e4f; text-decoration:underline; font-weight:400; margin:0 4px; }
   .cartPairedRow{
     font-size:12px; color:#6b4a3d; margin:2px 0 8px 18px;
+  }
+    .cartInlineMsg{
+    text-align:center; font-size:13px; font-weight:700; color:var(--brown);
+    margin-top:8px; min-height:16px; opacity:0; transition:opacity .3s ease;
+  }
+  .cartInlineMsg.show{ opacity:1; }
+
+    .armGroupDivider{
+    flex-basis:100%;
+    text-align:center;
+    font-size:12px;
+    font-weight:700;
+    color:var(--terracotta);
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin:10px 0 2px;
   }
 
   .previewBox{
@@ -143,6 +166,7 @@
         <a href="https://www.instagram.com/maliascraftedcreations/" target="_blank">Instagram</a> •
         <a href="https://www.facebook.com/share/18Pufov4T5/?mibextid=wwXIfr" target="_blank">Facebook</a>
       </div>
+      <div id="cartInlineMsg" class="cartInlineMsg"></div>
     </div>
   </div>
 
@@ -218,6 +242,13 @@ function loadCart() {
   } catch (e) {}
 }
 
+  function showCartMessage(msg) {
+  const el = document.getElementById("cartInlineMsg");
+  el.textContent = msg;
+  el.classList.add("show");
+  setTimeout(() => el.classList.remove("show"), 2200);
+}
+
 function addFullSet() {
   fullSets.push({ name: "Gnome Welcome Sign — Full Set", price: FULL_SET_PRICE });
   saveCart();
@@ -274,16 +305,17 @@ function updateCartDisplay() {
   } else {
     fullSets.forEach((item, i) => {
       const row = document.createElement("div");
-      row.className = "cartItem";
+      row.className = "cartItemNoBorder";
       row.innerHTML = `
         <span>${item.name} — $${item.price.toFixed(2)}</span>
         <span class="cartItem-remove" onclick="removeFromCart(${i})">✕</span>
       `;
       list.appendChild(row);
 
-      ARMS.filter(a => a.type === "set").forEach(a => {
+      const setArms = ARMS.filter(a => a.type === "set");
+      setArms.forEach((a, idx) => {
         const pairedRow = document.createElement("div");
-        pairedRow.className = "cartPairedRow";
+        pairedRow.className = "cartPairedRow" + (idx === setArms.length - 1 ? " cartPairedRowLast" : "");
         pairedRow.innerHTML = `↳ ${a.name} (included)`;
         list.appendChild(pairedRow);
       });
@@ -331,12 +363,12 @@ document.getElementById("cartToggle").onclick = () => {
 document.getElementById("cartCopyBtn").onclick = () => {
   const text = buildOrderText();
   if ((fullSets.length + extraArms.length) === 0) {
-    showToast("Your order is empty — add something first!");
+    showCartMessage("Your order is empty — add something first!");
     return;
   }
   const fullMessage = `Hi!\nMy name is ________.\nI'm interested in placing an order for a Gnome Welcome Sign!\n\nHere's what I picked out:\n${text}\n\n(Feel free to add any additional details or questions here!)\n\nThank you! 🤍`;
   navigator.clipboard.writeText(fullMessage).then(() => {
-    showToast("Copied! Paste into your message 💬");
+    showCartMessage("Copied! Paste into your message 💬");
   }).catch(() => {
     const textarea = document.createElement("textarea");
     textarea.value = fullMessage;
@@ -344,12 +376,13 @@ document.getElementById("cartCopyBtn").onclick = () => {
     textarea.select();
     document.execCommand("copy");
     document.body.removeChild(textarea);
-    showToast("Copied! Paste into your message 💬");
+    showCartMessage("Copied! Paste into your message 💬");
   });
   document.getElementById("cartEmailLink").href = "mailto:?subject=" + encodeURIComponent("Gnome Welcome Sign Order Request") + "&body=" + encodeURIComponent(fullMessage);
   document.getElementById("cartTextLink").href = "sms:?body=" + encodeURIComponent(fullMessage);
 };
 
+  
 function showToast(msg) {
   const t = document.getElementById("toast");
   t.textContent = msg;
@@ -363,7 +396,17 @@ function showToast(msg) {
 function renderArmGrid() {
   const grid = document.getElementById("armGrid");
   grid.innerHTML = "";
+  let lastType = null;
+
   ARMS.forEach((arm, i) => {
+    if (arm.type !== lastType) {
+      const divider = document.createElement("div");
+      divider.className = "armGroupDivider";
+      divider.textContent = arm.type === "set" ? "Included in the Full Set" : "Individual / Custom Attachments";
+      grid.appendChild(divider);
+      lastType = arm.type;
+    }
+
     const card = document.createElement("div");
     card.className = "armCard" + (i === 0 ? " active-arm" : "");
     const badge = arm.type === "set" ? "Included in Set" : `$${arm.price.toFixed(2)}`;
