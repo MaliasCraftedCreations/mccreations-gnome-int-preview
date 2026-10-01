@@ -14,6 +14,7 @@
     --brown:#4a2f27;
     --line:#e8dcd4;
     --white:#ffffff;
+   --black:#000;
   }
   *{ box-sizing:border-box; }
   html,body{
@@ -24,8 +25,8 @@
   }
   .wrap{ max-width:700px; margin:0 auto; padding:20px 16px 40px; }
 
-  h1.pageTitle{ text-align:center; font-size:28px; font-weight:600; margin:6px 0 4px; }
-  p.pageSub{ text-align:center; font-size:14px; color:var(--terracotta-border); margin:0 0 20px; }
+  h1.pageTitle{ text-align:center; font-size:28px; color:var(--black); font-weight:600; margin:6px 0 4px; }
+  p.pageSub{ text-align:center; font-size:14px; color:var(--brown); margin:0 0 20px; }
 
   .cartToggle{
     font-size:13px; font-weight:400; letter-spacing:0.2px;
@@ -87,7 +88,7 @@
     text-align:center;
     font-size:12px;
     font-weight:700;
-    color:var(--brown);
+    color:var(--black);
     text-transform:uppercase;
     letter-spacing:1px;
     margin:10px 0 2px;
@@ -100,7 +101,7 @@
   .previewBox img{ max-width:280px; width:100%; border-radius:12px; }
   .previewLabel{ font-weight:700; margin-top:10px; font-size:15px; }
 
-  .thumbRow{ display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:12px 0 4px; }
+  .thumbRow{ display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:12px 0 4px; color:var(--black); }
   .thumbRow img{
     width:56px; height:56px; object-fit:contain; background:var(--cream);
     border-radius:8px; cursor:pointer; border:2px solid var(--line);
@@ -118,7 +119,7 @@
   }
 
   h2.sectionTitle{ text-align:center; font-size:18px; margin-bottom:4px; }
-  p.sectionSub{ text-align:center; font-size:13px; color:var(--terracotta-border); margin:0 0 16px; }
+  p.sectionSub{ text-align:center; font-size:13px; color:var(--brown); margin:0 0 16px; }
 
   .armGrid{ display:flex; flex-wrap:wrap; justify-content:center; gap:16px; }
   .armCard{ width:80px; text-align:center; cursor:pointer; }
