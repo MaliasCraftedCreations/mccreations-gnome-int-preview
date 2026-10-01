@@ -166,8 +166,9 @@ const ARMS = [
   { name: "Flip Flops",              image: "URL_ARM_FLIPFLOPS", type: "individual", price: 15 },
   { name: "Snowflake (Replacement)", image: "URL_SET_SNOWFLAKE", type: "individual", price: 15 },
   { name: "Pumpkin (Replacement)",   image: "URL_SET_PUMPKIN",   type: "individual", price: 15 }
+  
 ];
-];
+  
 const FULL_SET_PRICE = 100;
 let currentSelection = ARMS[0];
 
@@ -228,7 +229,7 @@ function computeTotal() {
 function buildOrderText() {
   const lines = [];
   fullSets.forEach(item => {
-    lines.push(`- ${item.name} - $${item.price.toFixed(2)} (includes: ${FULL_SET_ARMS.map(a => a.name).join(", ")})`);
+    lines.push(`- ${item.name} - $${item.price.toFixed(2)} (includes: ${ARMS.filter(a => a.type === "set").map(a => a.name).join(", ")})`);
   });
   extraArms.forEach(item => {
     lines.push(`- Arm Attachment: ${item.name} - $${item.price.toFixed(2)}`);
