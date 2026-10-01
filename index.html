@@ -28,7 +28,7 @@
 
   h1.pageTitle{ text-align:center; font-size:28px; color:var(--black); font-weight:600; margin:6px 0 4px; }
   p.pageSub{ text-align:center; font-size:14px; color:var(--brown); margin:0 0 20px; }
-
+  .cartBox{ font-family: Arial, sans-serif; }
   .cartToggle{
      font-size:13px; font-weight:400; letter-spacing:0.2px;
     padding:6px 12px; border-radius:14px;
@@ -66,8 +66,8 @@
     white-space:nowrap; overflow:hidden;
   }
   .readyHeading{ text-align:center; font-weight:700; margin:4px 0; }
-  .readyWarning{ text-align:center; font-weight:700; color:#b5333a; margin:4px 0 10px; }
-  .readySteps{ text-align:center; font-weight:700; font-size:13px; line-height:1.6; margin-bottom:10px; }
+  .readyWarning{ text-align:center; font-weight:700; color:var(--brown); margin:4px 0 10px; }
+   .readySteps{ text-align:center; font-weight:700; font-size:13px; line-height:1.6; margin-bottom:10px; }
   .cartCopyBtn{
     display:block; width:fit-content; margin:10px auto 0;
     background:var(--terracotta); color:var(--white); border:none;
@@ -78,11 +78,14 @@
   .cartPairedRow{
     font-size:12px; color:#6b4a3d; margin:2px 0 8px 18px;
   }
-    .cartInlineMsg{
-    text-align:center; font-size:13px; font-weight:700; color:var(--brown);
-    margin-top:8px; min-height:16px; opacity:0; transition:opacity .3s ease;
+  .cartInlineMsg{
+    display:block; width:fit-content; margin:2px auto 0;
+    text-align:center; font-size:12px; color:#fff;
+    background:#b8846f; padding:6px 12px; border-radius:14px;
+    opacity:0; transform:translateY(8px);
+    transition:all 0.25s ease; pointer-events:none;
   }
-  .cartInlineMsg.show{ opacity:1; }
+  .cartInlineMsg.show{ opacity:1; transform:translateY(0); }
 
     .armGroupDivider{
     flex-basis:100%;
@@ -168,14 +171,10 @@
       <button class="cartCopyBtn" id="cartCopyBtn">📋 Copy Order</button>
 
       <div class="cartLinksRow">
-        <a href="#" id="cartEmailLink" target="_blank">Email</a> •
-        <a href="#" id="cartTextLink">Text</a> •
+        <a href="replace_URL" target="_blank">Email</a> •
         <a href="https://www.instagram.com/maliascraftedcreations/" target="_blank">Instagram</a> •
         <a href="https://www.facebook.com/share/18Pufov4T5/?mibextid=wwXIfr" target="_blank">Facebook</a>
       </div>
-      <div id="cartInlineMsg" class="cartInlineMsg"></div>
-    </div>
-  </div>
 
   <h1 class="pageTitle">Gnome Interchangeable</h1>
   <p class="pageSub">The Full Set comes with all 10 arm attachments shown below</p>
@@ -249,11 +248,15 @@ function loadCart() {
   } catch (e) {}
 }
 
-  function showCartMessage(msg) {
+function showCartMessage(msg) {
   const el = document.getElementById("cartInlineMsg");
   el.textContent = msg;
-  el.classList.add("show");
-  setTimeout(() => el.classList.remove("show"), 2200);
+  el.style.opacity = "1";
+  el.style.transform = "translateY(0)";
+  setTimeout(() => {
+    el.style.opacity = "0";
+    el.style.transform = "translateY(8px)";
+  }, 2000);
 }
 
 function addFullSet() {
@@ -385,9 +388,7 @@ document.getElementById("cartCopyBtn").onclick = () => {
     document.body.removeChild(textarea);
     showCartMessage("Copied! Paste into your message 💬");
   });
-  document.getElementById("cartEmailLink").href = "mailto:?subject=" + encodeURIComponent("Gnome Interchangeable Order Request") + "&body=" + encodeURIComponent(fullMessage);
-  document.getElementById("cartTextLink").href = "sms:?body=" + encodeURIComponent(fullMessage);
-};
+
 
   
 function showToast(msg) {
