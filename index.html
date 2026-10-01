@@ -81,20 +81,17 @@
   h2.sectionTitle{ text-align:center; font-size:18px; margin-bottom:4px; }
   p.sectionSub{ text-align:center; font-size:13px; color:var(--terracotta); margin:0 0 16px; }
 
-  .armGrid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; }
-  @media (max-width:600px){ .armGrid{ grid-template-columns: repeat(2, 1fr); } }
-
-  .armCard{ background:var(--white); border:1px solid var(--line); border-radius:12px; overflow:hidden; text-align:center; }
-  .armCard img{ width:100%; aspect-ratio:1/1; object-fit:contain; background:var(--cream); display:block; }
-  .armCard-label{ font-size:13px; font-weight:600; padding:6px 6px 2px; }
+  .armGrid{ display:flex; flex-wrap:wrap; justify-content:center; gap:16px; }
+  .armCard{ width:80px; text-align:center; cursor:pointer; }
+ .armCard img{ width:100%; aspect-ratio:1/1; object-fit:contain; background:transparent; display:block; }
+  .armCard-label{ font-size:12px; font-weight:600; padding-top:4px; line-height:1.2; }
   .armCard-price{ font-size:12px; color:var(--terracotta); margin-bottom:6px; }
   .armCard-addBtn{
     width:calc(100% - 12px); margin:0 6px 8px; background:var(--blush); color:var(--brown);
     border:none; padding:6px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer;
   }
-    .armCard.active-arm{
-    border-color:var(--terracotta);
-    box-shadow:0 0 0 2px var(--terracotta) inset;
+  .armCard.active-arm img{
+    filter: drop-shadow(0 0 6px var(--terracotta));
   }
 
   .toast{
