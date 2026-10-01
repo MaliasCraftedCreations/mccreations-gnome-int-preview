@@ -31,34 +31,12 @@
     background:var(--blush); color:var(--brown); border:none; cursor:pointer;
     display:block; margin:0 auto 14px; max-width:420px; text-align:center;
   }
-  
-  <div class="cartBox" id="cartBox">
-    <div class="cartBoxInner">
-      <strong>Your Order Selections:</strong>
-      <div id="cartList" style="margin-top:8px;"></div>
-      <div class="cartTotalRow" id="cartTotalRow" style="display:none;"></div>
 
-      <div class="cartDivider"></div>
-
-      <div class="readyHeading">Ready to order? Here's how! 👇</div>
-      <div class="readyWarning">Important: Please do not send screenshots ❗</div>
-      <div class="readySteps">
-        1. Tap "Copy Order"<br>
-        2. Choose Email, Text, Instagram, or Facebook<br>
-        3. Paste your order into the message 💬<br>
-        4. Send it to us!
-      </div>
-
-      <button class="cartCopyBtn" id="cartCopyBtn">📋 Copy Order</button>
-
-      <div class="cartLinksRow">
-        <a href="#" id="cartEmailLink" target="_blank">Email</a> •
-        <a href="#" id="cartTextLink">Text</a> •
-        <a href="https://www.instagram.com/maliascraftedcreations/" target="_blank">Instagram</a> •
-        <a href="https://www.facebook.com/share/18Pufov4T5/?mibextid=wwXIfr" target="_blank">Facebook</a>
-      </div>
-    </div>
-  </div>
+    .cartBox{
+    max-height:0; overflow:hidden; transition:max-height 0.3s ease;
+    max-width:500px; margin:0 auto 14px; border-radius:12px;
+    background:var(--blush-dark); border:2px dashed #c89f8d; color:var(--brown); font-size:14px;
+  }
   
   .cartBox.open{ max-height:700px; }
   .cartBoxInner{ padding:12px 16px; }
@@ -139,15 +117,30 @@
 <div class="wrap">
 
   <button class="cartToggle" id="cartToggle">🛒 Your Order (0 items) — tap to view</button>
+
   <div class="cartBox" id="cartBox">
     <div class="cartBoxInner">
-      <div id="cartList"></div>
+      <strong>Your Order Selections:</strong>
+      <div id="cartList" style="margin-top:8px;"></div>
       <div class="cartTotalRow" id="cartTotalRow" style="display:none;"></div>
-      <button class="cartCopyBtn" id="cartCopyBtn">📋 Copy Full Order</button>
-      <div class="cartContactRow">
-        <a href="#" id="cartEmailLink" target="_blank">Email</a>
-        <a href="#" id="cartTextLink">Text</a>
-        <a href="https://www.instagram.com/maliascraftedcreations/" target="_blank">Instagram</a>
+
+      <div class="cartDivider"></div>
+
+      <div class="readyHeading">Ready to order? Here's how! 👇</div>
+      <div class="readyWarning">Important: Please do not send screenshots ❗</div>
+      <div class="readySteps">
+        1. Tap "Copy Order"<br>
+        2. Choose Email, Text, Instagram, or Facebook<br>
+        3. Paste your order into the message 💬<br>
+        4. Send it to us!
+      </div>
+
+      <button class="cartCopyBtn" id="cartCopyBtn">📋 Copy Order</button>
+
+      <div class="cartLinksRow">
+        <a href="#" id="cartEmailLink" target="_blank">Email</a> •
+        <a href="#" id="cartTextLink">Text</a> •
+        <a href="https://www.instagram.com/maliascraftedcreations/" target="_blank">Instagram</a> •
         <a href="https://www.facebook.com/share/18Pufov4T5/?mibextid=wwXIfr" target="_blank">Facebook</a>
       </div>
     </div>
