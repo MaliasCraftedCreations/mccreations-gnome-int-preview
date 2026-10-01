@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MC Creations — Gnome Welcome Sign</title>
+<style>
+  :root{
+    --cream:#faf5f0;
+    --blush:#e2c2b3;
+    --blush-dark:#d6b1a1;
+    --terracotta:#876356;
+    --brown:#4a2f27;
+    --line:#e8dcd4;
+    --white:#ffffff;
+  }
+  *{ box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; overflow-x:hidden;
+    font-family: Arial, sans-serif;
+    color:var(--brown);
+    background:transparent;
+  }
+  .wrap{ max-width:700px; margin:0 auto; padding:20px 16px 40px; }
+
+  h1.pageTitle{ text-align:center; font-size:26px; font-weight:700; margin:6px 0 4px; }
+  p.pageSub{ text-align:center; font-size:14px; color:var(--terracotta); margin:0 0 20px; }
+
+  .cartToggle{
+    font-size:13px; font-weight:600; padding:8px 16px; border-radius:16px;
+    background:var(--blush); color:var(--brown); border:none; cursor:pointer;
+    display:block; margin:0 auto 14px; max-width:420px; text-align:center;
+  }
+  .cartBox{
+    max-height:0; overflow:hidden; transition:max-height 0.3s ease;
+    max-width:500px; margin:0 auto 14px; border-radius:12px;
+    background:var(--blush-dark); border:2px dashed #c89f8d; color:var(--brown); font-size:14px;
+  }
+  .cartBox.open{ max-height:700px; }
+  .cartBoxInner{ padding:12px 16px; }
+  .cartItem{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:8px 0; border-bottom:1px dashed var(--terracotta); font-size:13px;
+  }
+  .cartItem:last-child{ border-bottom:none; }
+  .cartItem-remove{ border:none; background:none; color:var(--brown); font-weight:700; cursor:pointer; font-size:15px; }
+  .cartEmptyMsg{ font-size:13px; text-align:center; padding:10px 0; }
+  .cartTotalRow{ margin-top:10px; padding-top:8px; border-top:1px dashed var(--terracotta); font-weight:700; text-align:center; }
+  .cartDisclaimer{ font-weight:400; font-size:11px; color:#8b5e4f; margin-top:2px; }
+  .cartCopyBtn{
+    width:100%; background:var(--terracotta); color:var(--white); border:none;
+    padding:10px; border-radius:14px; font-size:13px; font-weight:700; cursor:pointer; margin-top:8px;
+  }
+  .cartContactRow{ display:flex; justify-content:center; gap:14px; margin-top:10px; font-size:13px; }
+  .cartContactRow a{ color:var(--brown); text-decoration:none; font-weight:600; }
+
+  .previewBox{
+    background:var(--white); border:1px solid var(--line); border-radius:16px;
+    padding:16px; text-align:center; margin-bottom:16px;
+  }
+  .previewBox img{ max-width:280px; width:100%; border-radius:12px; }
+  .previewLabel{ font-weight:700; margin-top:10px; font-size:15px; }
+
+  .thumbRow{ display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:12px 0 4px; }
+  .thumbRow img{
+    width:56px; height:56px; object-fit:contain; background:var(--cream);
+    border-radius:8px; cursor:pointer; border:2px solid var(--line);
+  }
+  .thumbRow img.active-thumb{ border-color:var(--terracotta); }
+
+  .addFullSetBtn{
+    width:100%; background:var(--terracotta); color:var(--white); border:none;
+    padding:13px; border-radius:16px; font-size:15px; font-weight:700; cursor:pointer; margin-top:6px;
+  }
+
+  .sectionDivider{
+    text-align:center; margin:26px 0 14px; color:var(--terracotta);
+    font-size:12px; letter-spacing:2px; text-transform:uppercase;
+  }
+
+  h2.sectionTitle{ text-align:center; font-size:18px; margin-bottom:4px; }
+  p.sectionSub{ text-align:center; font-size:13px; color:var(--terracotta); margin:0 0 16px; }
+
+  .armGrid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; }
+  @media (max-width:600px){ .armGrid{ grid-template-columns: repeat(2, 1fr); } }
+
+  .armCard{ background:var(--white); border:1px solid var(--line); border-radius:12px; overflow:hidden; text-align:center; }
+  .armCard img{ width:100%; aspect-ratio:1/1; object-fit:contain; background:var(--cream); display:block; }
+  .armCard-label{ font-size:13px; font-weight:600; padding:6px 6px 2px; }
+  .armCard-price{ font-size:12px; color:var(--terracotta); margin-bottom:6px; }
+  .armCard-addBtn{
+    width:calc(100% - 12px); margin:0 6px 8px; background:var(--blush); color:var(--brown);
+    border:none; padding:6px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer;
+  }
+
+  .toast{
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+    background:var(--brown); color:var(--white); padding:9px 16px; border-radius:14px;
+    font-size:13px; opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:9999; text-align:center;
+  }
+  .toast.show{ opacity:1; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <button class="cartToggle" id="cartToggle">🛒 Your Order (0 items) — tap to view</button>
+  <div class="cartBox" id="cartBox">
+    <div class="cartBoxInner">
+      <div id="cartList"></div>
+      <div class="cartTotalRow" id="cartTotalRow" style="display:none;"></div>
+      <button class="cartCopyBtn" id="cartCopyBtn">📋 Copy Full Order</button>
+      <div class="cartContactRow">
+        <a href="#" id="cartEmailLink" target="_blank">Email</a>
+        <a href="#" id="cartTextLink">Text</a>
+        <a href="https://www.instagram.com/maliascraftedcreations/" target="_blank">Instagram</a>
+        <a href="https://www.facebook.com/share/18Pufov4T5/?mibextid=wwXIfr" target="_blank">Facebook</a>
+      </div>
+    </div>
+  </div>
+
+  <h1 class="pageTitle">Gnome Welcome Sign</h1>
+  <p class="pageSub">The Full Set comes with all 10 arm attachments shown below</p>
+
+  <div class="previewBox">
+    <img id="previewImg" src="URL_BACKER_MAIN" alt="Gnome Welcome Sign">
+    <div class="previewLabel" id="previewLabel">Snowflake</div>
+  </div>
+
+  <div class="thumbRow" id="fullSetThumbs"></div>
+
+  <button class="addFullSetBtn" id="addFullSetBtn">➕ Add The Full Set to Order — $100.00</button>
+
+  <div class="sectionDivider">— or —</div>
+  <h2 class="sectionTitle">Order Individual Arm Attachments</h2>
+  <p class="sectionSub">Replacements from the set, or one of our custom extras — priced and added separately</p>
+
+  <div class="armGrid" id="armGrid"></div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================================================================
+   THE FULL SET — these 10 always come together for $100 flat.
+   Clicking a thumbnail below only changes the preview picture —
+   it has no effect on price, since all 10 are already included.
+   Replace the image URLs with your real photos.
+   ================================================================ */
+const FULL_SET_ARMS = [
+  { name: "Snowflake",      image: "URL_SET_SNOWFLAKE" },
+  { name: "Heart",          image: "URL_SET_HEART" },
+  { name: "Easter Egg",     image: "URL_SET_EASTEREGG" },
+  { name: "American Flag",  image: "URL_SET_FLAG" },
+  { name: "Sunflower",      image: "URL_SET_SUNFLOWER" },
+  { name: "Ghost",          image: "URL_SET_GHOST" },
+  { name: "Pumpkin",        image: "URL_SET_PUMPKIN" },
+  { name: "Christmas Tree", image: "URL_SET_TREE" },
+  { name: "Watermelon",     image: "URL_SET_WATERMELON" },
+  { name: "Clover",         image: "URL_SET_CLOVER" }
+];
+const FULL_SET_PRICE = 100;
+
+/* ================================================================
+   INDIVIDUAL ARM ATTACHMENTS — sold on their own, always at their
+   own price, never bundled into the Full Set price. This includes
+   replacements of set arms (in case one breaks) AND fully custom
+   extras. Prices below are placeholders — update to your real ones.
+   Copy one block to add more.
+   ================================================================ */
+const INDIVIDUAL_ARMS = [
+  { name: "Turkey",      image: "URL_ARM_TURKEY",   price: 12 },
+  { name: "Pencil",      image: "URL_ARM_PENCIL",   price: 12 },
+  { name: "Witch Hat",   image: "URL_ARM_WITCHHAT", price: 12 },
+  { name: "Flip Flops",  image: "URL_ARM_FLIPFLOPS",price: 12 },
+  // Replacement versions of the set arms, sold individually:
+  { name: "Snowflake (Replacement)",  image: "URL_SET_SNOWFLAKE",  price: 12 },
+  { name: "Pumpkin (Replacement)",    image: "URL_SET_PUMPKIN",    price: 12 }
+];
+
+/* ================================================================
+   CART — persists across reloads using its own storage key, kept
+   separate from your other tools' carts on purpose.
+   ================================================================ */
+const CART_STORAGE_KEY = "mc_gnome_interchangeables_cart";
+let fullSets = [];
+let extraArms = [];
+
+function saveCart() {
+  try {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify({ fullSets, extraArms }));
+  } catch (e) {}
+}
+function loadCart() {
+  try {
+    const saved = localStorage.getItem(CART_STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      fullSets = parsed.fullSets || [];
+      extraArms = parsed.extraArms || [];
+    }
+  } catch (e) {}
+}
+
+function addFullSet() {
+  fullSets.push({ name: "Gnome Welcome Sign — Full Set", price: FULL_SET_PRICE });
+  saveCart();
+  updateCartDisplay();
+  showToast("Full Set added to your order 🛒");
+}
+
+function addExtraArm(name, price) {
+  extraArms.push({ name: name, price: price });
+  saveCart();
+  updateCartDisplay();
+  showToast(name + " added to your order 🛒");
+}
+
+function removeFromCart(index) {
+  if (index < fullSets.length) {
+    fullSets.splice(index, 1);
+  } else {
+    extraArms.splice(index - fullSets.length, 1);
+  }
+  saveCart();
+  updateCartDisplay();
+}
+
+function computeTotal() {
+  const setsTotal = fullSets.reduce((s, item) => s + item.price, 0);
+  const armsTotal = extraArms.reduce((s, item) => s + item.price, 0);
+  return setsTotal + armsTotal;
+}
+
+function buildOrderText() {
+  const lines = [];
+  fullSets.forEach(item => {
+    lines.push(`- ${item.name} - $${item.price.toFixed(2)} (includes: ${FULL_SET_ARMS.map(a => a.name).join(", ")})`);
+  });
+  extraArms.forEach(item => {
+    lines.push(`- Arm Attachment: ${item.name} - $${item.price.toFixed(2)}`);
+  });
+  lines.push("");
+  lines.push(`Estimated Subtotal: $${computeTotal().toFixed(2)} (excludes shipping and any applicable sales tax — final total will be confirmed with you)`);
+  return lines.join("\n");
+}
+
+function updateCartDisplay() {
+  const toggle = document.getElementById("cartToggle");
+  const list = document.getElementById("cartList");
+  const totalRow = document.getElementById("cartTotalRow");
+
+  const combined = [...fullSets, ...extraArms];
+  toggle.textContent = `🛒 Your Order (${combined.length} item${combined.length === 1 ? "" : "s"}) — tap to view`;
+
+  list.innerHTML = "";
+  if (combined.length === 0) {
+    list.innerHTML = '<div class="cartEmptyMsg">No items yet — add the Full Set or an individual arm above.</div>';
+  } else {
+    combined.forEach((item, i) => {
+      const row = document.createElement("div");
+      row.className = "cartItem";
+      row.innerHTML = `
+        <span>${item.name} — $${item.price.toFixed(2)}</span>
+        <span class="cartItem-remove" onclick="removeFromCart(${i})">✕</span>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  if (combined.length > 0) {
+    totalRow.style.display = "block";
+    totalRow.innerHTML = `
+      Estimated Subtotal: $${computeTotal().toFixed(2)}
+      <div class="cartDisclaimer">Excludes shipping and any applicable sales tax — final total will be confirmed with you directly.</div>
+    `;
+  } else {
+    totalRow.style.display = "none";
+  }
+
+  const box = document.getElementById("cartBox");
+  if (combined.length > 0 && box.classList.contains("open")) {
+    box.style.maxHeight = box.scrollHeight + "px";
+  }
+}
+
+document.getElementById("cartToggle").onclick = () => {
+  const box = document.getElementById("cartBox");
+  box.classList.toggle("open");
+  box.style.maxHeight = box.classList.contains("open") ? box.scrollHeight + "px" : "0px";
+};
+
+document.getElementById("cartCopyBtn").onclick = () => {
+  const text = buildOrderText();
+  if ((fullSets.length + extraArms.length) === 0) {
+    showToast("Your order is empty — add something first!");
+    return;
+  }
+  const fullMessage = `Hi!\nMy name is ________.\nI'm interested in placing an order for a Gnome Welcome Sign!\n\nHere's what I picked out:\n${text}\n\n(Feel free to add any additional details or questions here!)\n\nThank you! 🤍`;
+  navigator.clipboard.writeText(fullMessage).then(() => {
+    showToast("Copied! Paste into your message 💬");
+  }).catch(() => {
+    const textarea = document.createElement("textarea");
+    textarea.value = fullMessage;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+    showToast("Copied! Paste into your message 💬");
+  });
+  document.getElementById("cartEmailLink").href = "mailto:?subject=" + encodeURIComponent("Gnome Welcome Sign Order Request") + "&body=" + encodeURIComponent(fullMessage);
+  document.getElementById("cartTextLink").href = "sms:?body=" + encodeURIComponent(fullMessage);
+};
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+/* ================================================================
+   RENDER: Full Set preview thumbnails (visual only, no pricing)
+   ================================================================ */
+function renderFullSetThumbs() {
+  const row = document.getElementById("fullSetThumbs");
+  row.innerHTML = "";
+  FULL_SET_ARMS.forEach((arm, i) => {
+    const img = document.createElement("img");
+    img.src = arm.image;
+    img.title = arm.name;
+    if (i === 0) img.classList.add("active-thumb");
+    img.onclick = () => {
+      document.getElementById("previewImg").src = arm.image;
+      document.getElementById("previewLabel").textContent = arm.name;
+      row.querySelectorAll("img").forEach(t => t.classList.remove("active-thumb"));
+      img.classList.add("active-thumb");
+    };
+    row.appendChild(img);
+  });
+}
+
+/* ================================================================
+   RENDER: Individual arm attachment grid
+   ================================================================ */
+function renderArmGrid() {
+  const grid = document.getElementById("armGrid");
+  grid.innerHTML = "";
+  INDIVIDUAL_ARMS.forEach(arm => {
+    const card = document.createElement("div");
+    card.className = "armCard";
+    card.innerHTML = `
+      <img src="${arm.image}" alt="${arm.name}">
+      <div class="armCard-label">${arm.name}</div>
+      <div class="armCard-price">$${arm.price.toFixed(2)}</div>
+      <button class="armCard-addBtn">Add to Order</button>
+    `;
+    card.querySelector(".armCard-addBtn").onclick = () => addExtraArm(arm.name, arm.price);
+    grid.appendChild(card);
+  });
+}
+
+document.getElementById("addFullSetBtn").onclick = addFullSet;
+
+/* ================================================================
+   INIT
+   ================================================================ */
+loadCart();
+renderFullSetThumbs();
+renderArmGrid();
+updateCartDisplay();
+</script>
+</body>
+</html>
