@@ -319,7 +319,7 @@ function updateCartDisplay() {
   list.innerHTML = "";
 
   if (combined.length === 0) {
-    list.innerHTML = '<div class="cartEmptyMsg">No items yet — tap any arm above and add it to your order.</div>';
+    list.innerHTML = '<div class="cartEmptyMsg">Your cart is empty! Browse and add items below.</div>';
   } else {
     fullSets.forEach((item, i) => {
       const row = document.createElement("div");
