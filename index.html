@@ -449,10 +449,10 @@ function selectArm(arm, cardEl) {
 function updateActionButton() {
   const btn = document.getElementById("actionBtn");
   if (currentSelection.type === "set") {
-    btn.textContent = `➕ Add The Full Set to Order — $${FULL_SET_PRICE.toFixed(2)}`;
+    btn.textContent = `➕ Add The Full Set to Order`;
     btn.onclick = addFullSet;
   } else {
-    btn.textContent = `➕ Add ${currentSelection.name} to Order — $${currentSelection.price.toFixed(2)}`;
+    btn.textContent = `➕ Add ${currentSelection.name} to Order`;
     btn.onclick = () => addExtraArm(currentSelection.name, currentSelection.price);
   }
 }
