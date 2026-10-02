@@ -173,9 +173,10 @@
         <a href="https://www.instagram.com/maliascraftedcreations/" target="_blank">Instagram</a> •
         <a href="https://www.facebook.com/share/18Pufov4T5/?mibextid=wwXIfr" target="_blank">Facebook</a>
       </div>
-      <div id="cartInlineMsg" class="cartInlineMsg"></div>
     </div>
   </div>
+
+  <div id="cartInlineMsg" class="cartInlineMsg"></div>
 
   <h1 class="pageTitle">Gnome Interchangeable</h1>
    
@@ -255,12 +256,6 @@ function showCartMessage(msg) {
   el.textContent = msg;
   el.style.opacity = "1";
   el.style.transform = "translateY(0)";
-
-  const box = document.getElementById("cartBox");
-  if (box.classList.contains("open")) {
-    box.style.maxHeight = box.scrollHeight + "px";
-  }
-
   setTimeout(() => {
     el.style.opacity = "0";
     el.style.transform = "translateY(8px)";
