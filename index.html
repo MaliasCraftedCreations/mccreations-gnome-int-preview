@@ -190,11 +190,12 @@
   </div>
 
   <div id="zoomPreview" style="position:relative;width:100%;max-width:320px;height:120px;margin:0 auto 12px auto;overflow:hidden;background:var(--cream);">
-    <img id="zoomBackerImg" src="" style="position:absolute;filter:brightness(0.75);">
+    <div id="zoomTitle" style="position:absolute;top:6px;left:8px;font-size:12px;font-weight:700;color:var(--black);text-shadow:0 0 10px #fff, 0 0 15px #fff, 0 0 25px #fff;z-index:2;">Detail View:</div>
+     <img id="zoomBackerImg" src="" style="position:absolute;filter:brightness(0.9);">
     <img id="zoomArmImg" src="" style="position:absolute;pointer-events:none;">
   </div>
 
-  <div id="previewTitle" style="text-align:center;line-height:1.3;font-size:15px;margin-bottom:12px;">
+  <div id="previewTitle" style="text-align:center;line-height:1.3;font-size:15px;margin-bottom:12px;color:var(--black)">
     <div>Sign – <span style="font-weight:700;">Gnome Welcome Sign</span></div>
     <div>Attachment – <span id="armName" style="font-weight:700;">None</span></div>
   </div>
@@ -216,27 +217,27 @@
    Replace the image URLs with your real photos.
    ================================================================ */
 const ARMS = [
-  { name: "Snowflake",      image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Snowflake-adecb51.png/:/rs=w:740,cg:true,m",  type: "set", top: "72.9%", left: "49.7%", scale: 0.385 },
-  { name: "Heart",          image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Heart.png/:/rs=w:740,cg:true,m",  type: "set", top: "72.9%", left: "49.7%", scale: 0.385 },
-  { name: "Easter Egg",     image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Egg.png/:/rs=w:740,cg:true,m",  type: "set", top: "72.9%", left: "49.7%", scale: 0.385 },
-  { name: "Clover",         image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Clover.png/:/rs=w:740,cg:true,m",  type: "set", top: "72.9%", left: "49.7%", scale: 0.385 },
-  { name: "American Flag",  image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Flag-43be263.png/:/rs=w:740,cg:true,m",  type: "set", top: "72.9%", left: "49.7%", scale: 0.385 },
-  { name: "Watermelon",     image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Watermelon.png/:/rs=w:740,cg:true,m",  type: "set", top: "72.9%", left: "49.7%", scale: 0.385 },
-  { name: "Sunflower",      image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Sumflower.png/:/rs=w:740,cg:true,m",  type: "set", top: "72.9%", left: "49.7%", scale: 0.385 },
-  { name: "Pumpkin",        image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Pumpkin-e9e0ce5.png/:/rs=w:740,cg:true,m",  type: "set", top: "72.9%", left: "49.7%", scale: 0.385 },
-  { name: "Ghost",          image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Ghost.png/:/rs=w:740,cg:true,m",  type: "set", top: "72.9%", left: "49.7%", scale: 0.385 },
-  { name: "Christmas Tree", image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Christmas%20Tree.png/:/rs=w:740,cg:true,m",  type: "set", top: "72.9%", left: "49.7%", scale: 0.385 },
+  { name: "Snowflake",      image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Snowflake-adecb51.png/:/rs=w:740,cg:true,m",  type: "set", top: "74%", left: "49.7%", scale: 0.385, zoomOverride: 1.6 },
+  { name: "Heart",          image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Heart.png/:/rs=w:740,cg:true,m",  type: "set", top: "73%", left: "49.7%", scale: 0.375, zoomOverride: 1.8 },
+  { name: "Easter Egg",     image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Egg.png/:/rs=w:740,cg:true,m",  type: "set", top: "71.5%", left: "49.7%", scale: 0.38, zoomOverride: 1.8 },
+  { name: "Clover",         image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Clover.png/:/rs=w:740,cg:true,m",  type: "set", top: "72.9%", left: "49.7%", scale: 0.375, zoomOverride: 1.7 },
+  { name: "American Flag",  image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Flag-43be263.png/:/rs=w:740,cg:true,m",  type: "set", top: "73%", left: "49.7%", scale: 0.375, zoomOverride: 1.8 },
+  { name: "Watermelon",     image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Watermelon.png/:/rs=w:740,cg:true,m",  type: "set", top: "72.7%", left: "49.7%", scale: 0.38, zoomOverride: 2.1 },
+  { name: "Sunflower",      image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Sumflower.png/:/rs=w:740,cg:true,m",  type: "set", top: "72.8%", left: "49.7%", scale: 0.38, zoomOverride: 1.8 },
+  { name: "Pumpkin",        image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Pumpkin-e9e0ce5.png/:/rs=w:740,cg:true,m",  type: "set", top: "73.8%", left: "49.7%", scale: 0.375, zoomOverride: 2.1 },
+  { name: "Ghost",          image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Ghost.png/:/rs=w:740,cg:true,m",  type: "set", top: "75%", left: "49.7%", scale: 0.374, zoomOverride: 1.4 },
+  { name: "Christmas Tree", image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Christmas%20Tree.png/:/rs=w:740,cg:true,m",  type: "set", top: "74.5%", left: "49.7%", scale: 0.378, zoomOverride: 1.4 },
 
-  { name: "Snowflake (Single Replacement)",      image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Snowflake-adecb51.png/:/rs=w:740,cg:true,m", type: "individual", top: "72.9%", left: "49.7%", scale: 0.385, price: 15 },
-  { name: "Heart (Single Replacement)",          image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Heart.png/:/rs=w:740,cg:true,m",  type: "individual", top: "72.9%", left: "49.7%", scale: 0.385, price: 15 },
-  { name: "Easter Egg (Single Replacement)",     image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Egg.png/:/rs=w:740,cg:true,m",  type: "individual", top: "72.9%", left: "49.7%", scale: 0.385, price: 15 },
-  { name: "Clover (Single Replacement)",         image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Clover.png/:/rs=w:740,cg:true,m",  type: "individual", top: "72.9%", left: "49.7%", scale: 0.385, price: 15 },
-  { name: "American Flag (Single Replacement)",  image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Flag-43be263.png/:/rs=w:740,cg:true,m",  type: "individual", top: "72.9%", left: "49.7%", scale: 0.385, price: 15 },
-  { name: "Watermelon (Single Replacement)",     image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Watermelon.png/:/rs=w:740,cg:true,m",  type: "individual", top: "72.9%", left: "49.7%", scale: 0.385, price: 15 },
-  { name: "Sunflower (Single Replacement)",      image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Sumflower.png/:/rs=w:740,cg:true,m",  type: "individual", top: "72.9%", left: "49.7%", scale: 0.385, price: 15 },
-  { name: "Pumpkin (Single Replacement)",        image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Pumpkin-e9e0ce5.png/:/rs=w:740,cg:true,m",   type: "individual", top: "72.9%", left: "49.7%", scale: 0.385, price: 15 },
-  { name: "Ghost (Single Replacement)",          image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Ghost.png/:/rs=w:740,cg:true,m",  type: "individual", top: "72.9%", left: "49.7%", scale: 0.385, price: 15 },
-  { name: "Christmas Tree (Single Replacement)", image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Christmas%20Tree.png/:/rs=w:740,cg:true,m",  type: "individual", top: "72.9%", left: "49.7%", scale: 0.385, price: 15 }
+  { name: "Snowflake (Single Replacement)",      image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Snowflake-adecb51.png/:/rs=w:740,cg:true,m", type: "individual", top: "74%", left: "49.7%", scale: 0.385, zoomOverride: 1.6, price: 15 },
+  { name: "Heart (Single Replacement)",          image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Heart.png/:/rs=w:740,cg:true,m",  type: "individual", top: "73%", left: "49.7%", scale: 0.375, zoomOverride: 1.8, price: 15 },
+  { name: "Easter Egg (Single Replacement)",     image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Egg.png/:/rs=w:740,cg:true,m",  type: "individual", top: "71.5%", left: "49.7%", scale: 0.38, zoomOverride: 1.8, price: 15 },
+  { name: "Clover (Single Replacement)",         image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Clover.png/:/rs=w:740,cg:true,m",  type: "individual", top: "72.9%", left: "49.7%", scale: 0.375, zoomOverride: 1.7, price: 15 },
+  { name: "American Flag (Single Replacement)",  image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Flag-43be263.png/:/rs=w:740,cg:true,m",  type: "individual", top: "73%", left: "49.7%", scale: 0.375, zoomOverride: 1.8, price: 15 },
+  { name: "Watermelon (Single Replacement)",     image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Watermelon.png/:/rs=w:740,cg:true,m",  type: "individual", top: "72.7%", left: "49.7%", scale: 0.38, zoomOverride: 2.1, price: 15 },
+  { name: "Sunflower (Single Replacement)",      image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Sumflower.png/:/rs=w:740,cg:true,m",  type: "individual", top: "72.8%", left: "49.7%", scale: 0.38, zoomOverride: 1.8, price: 15 },
+  { name: "Pumpkin (Single Replacement)",        image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Pumpkin-e9e0ce5.png/:/rs=w:740,cg:true,m",   type: "individual", top: "73.8%", left: "49.7%", scale: 0.375, zoomOverride: 2.1, price: 15 },
+  { name: "Ghost (Single Replacement)",          image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Ghost.png/:/rs=w:740,cg:true,m",  type: "individual", top: "75%", left: "49.7%", scale: 0.374, zoomOverride: 1.4, price: 15 },
+  { name: "Christmas Tree (Single Replacement)", image: "https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Christmas%20Tree.png/:/rs=w:740,cg:true,m",  type: "individual", top: "74.5%", left: "49.7%", scale: 0.378, zoomOverride: 1.4, price: 15 }
   
 ];
   
@@ -517,8 +518,9 @@ function updateActionButton() {
 
   const backerWidth = backerImg.clientWidth;
   const backerHeight = backerImg.clientHeight;
-  const zoomedBackerWidth = backerWidth * ZOOM_FACTOR;
-  const zoomedBackerHeight = backerHeight * ZOOM_FACTOR;
+  const effectiveZoom = arm.zoomOverride || ZOOM_FACTOR;
+  const zoomedBackerWidth = backerWidth * effectiveZoom;
+  const zoomedBackerHeight = backerHeight * effectiveZoom;
 
   zoomBacker.src = backerImg.src;
   zoomBacker.style.width = zoomedBackerWidth + "px";
@@ -531,7 +533,7 @@ function updateActionButton() {
   zoomBacker.style.top = (boxHeight / 2 - pointY) + "px";
 
   const scaleFactor = arm.scale || 0.3;
-  const zoomedArmWidth = backerWidth * scaleFactor * ZOOM_FACTOR;
+  const zoomedArmWidth = backerWidth * scaleFactor * effectiveZoom;
 
   zoomArm.src = arm.image;
   zoomArm.style.left = (boxWidth / 2) + "px";
