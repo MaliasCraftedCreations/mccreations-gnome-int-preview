@@ -130,7 +130,7 @@
 
   @media (max-width: 768px){
     .armCard{
-      width: calc(20% - 13px); /* 5 per row, matching your door hanger's layout */
+      width: calc(33.33% - 11px); /* 3 per row */
     }
   }
    
@@ -502,12 +502,10 @@ function selectArm(arm, cardEl) {
   document.querySelectorAll(".armCard").forEach(c => c.classList.remove("active-arm"));
   if (cardEl) cardEl.classList.add("active-arm");
 
-     // Auto-scroll back up to the preview on mobile, same as your other tools
-  if (window.innerWidth <= 768) {
-    const preview = document.getElementById("previewArea");
-    if (preview) {
-      preview.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+  // Auto-scroll back up to the preview, on any screen size
+  const preview = document.getElementById("previewArea");
+  if (preview) {
+    preview.scrollIntoView({ behavior: "smooth", block: "center" });
   }
    
   updateZoomPreview(arm);
