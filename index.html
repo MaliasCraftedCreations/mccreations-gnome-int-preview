@@ -194,6 +194,11 @@
     <div>Attachment – <span id="armName" style="font-weight:700;">None</span></div>
   </div>
 
+     <div id="zoomPreview" style="position:relative;width:100%;max-width:320px;height:120px;margin:0 auto 20px auto;overflow:hidden;border-radius:12px;background:var(--cream);">
+    <img id="zoomBackerImg" src="" style="position:absolute;">
+    <img id="zoomArmImg" src="" style="position:absolute;pointer-events:none;">
+  </div>
+
   <button class="addFullSetBtn" id="actionBtn"></button>
 
   <p class="sectionSub" style="margin-top:4px;">Tap any arm below to preview it on the sign</p>
@@ -237,6 +242,24 @@ const ARMS = [
   
 const FULL_SET_PRICE = 100;
 let currentSelection = ARMS[0];
+   // Adjust these two to control the zoomed detail strip below the main preview
+const ZOOM_HEIGHT = 120;  // how tall the strip is, in pixels — also update the matching height in the HTML above
+const ZOOM_FACTOR = 3;    // how magnified it is — higher number = more zoomed in
+
+   /*
+  zoomTop / zoomLeft: OPTIONAL. By default, the zoomed detail strip
+  automatically centers on wherever this attachment's top/left position
+  already is. Only add zoomTop/zoomLeft if you need the zoomed-in view to
+  focus somewhere slightly different than the attachment's exact point —
+  most arms should never need this.
+ 
+  EXAMPLES:
+  { name: "Snowflake", image: "URL_SET_SNOWFLAKE", type: "set", top: "65%", left: "51%", scale: 0.3 },
+// ^ normal — zoom view auto-centers on top/left, no extra fields needed
+
+{ name: "Pumpkin", image: "URL_SET_PUMPKIN", type: "set", top: "70%", left: "48%", scale: 0.35, zoomTop: "68%", zoomLeft: "50%" },
+// ^ override example — zoom view centers on zoomTop/zoomLeft instead, in case the automatic centering ever looks slightly off for a specific arm
+*/
 
 /* ================================================================
    CART — persists across reloads using its own storage key, kept
@@ -462,6 +485,8 @@ function selectArm(arm, cardEl) {
 
   document.querySelectorAll(".armCard").forEach(c => c.classList.remove("active-arm"));
   if (cardEl) cardEl.classList.add("active-arm");
+
+  updateZoomPreview(arm);
   updateActionButton();
 }
 
@@ -474,6 +499,46 @@ function updateActionButton() {
     btn.textContent = `➕ Add ${currentSelection.name} to Order`;
     btn.onclick = () => addExtraArm(currentSelection.name, currentSelection.price);
   }
+}
+
+   function updateZoomPreview(arm) {
+  const zoomBox = document.getElementById("zoomPreview");
+  const zoomBacker = document.getElementById("zoomBackerImg");
+  const zoomArm = document.getElementById("zoomArmImg");
+  const backerImg = document.getElementById("backerPreview");
+
+  const boxWidth = zoomBox.clientWidth;
+  const boxHeight = ZOOM_HEIGHT;
+
+  // Use the override position if provided, otherwise fall back to the
+  // same top/left the attachment already uses on the main preview.
+  const zoomTopPct = parseFloat(arm.zoomTop || arm.top);
+  const zoomLeftPct = parseFloat(arm.zoomLeft || arm.left);
+
+  const backerWidth = backerImg.clientWidth;
+  const backerHeight = backerImg.clientHeight;
+  const zoomedBackerWidth = backerWidth * ZOOM_FACTOR;
+  const zoomedBackerHeight = backerHeight * ZOOM_FACTOR;
+
+  zoomBacker.src = backerImg.src;
+  zoomBacker.style.width = zoomedBackerWidth + "px";
+  zoomBacker.style.height = zoomedBackerHeight + "px";
+
+  const pointX = (zoomLeftPct / 100) * zoomedBackerWidth;
+  const pointY = (zoomTopPct / 100) * zoomedBackerHeight;
+
+  zoomBacker.style.left = (boxWidth / 2 - pointX) + "px";
+  zoomBacker.style.top = (boxHeight / 2 - pointY) + "px";
+
+  const scaleFactor = arm.scale || 0.3;
+  const zoomedArmWidth = backerWidth * scaleFactor * ZOOM_FACTOR;
+
+  zoomArm.src = arm.image;
+  zoomArm.style.left = (boxWidth / 2) + "px";
+  zoomArm.style.top = (boxHeight / 2) + "px";
+  zoomArm.style.transform = "translate(-50%, -50%)";
+  zoomArm.style.width = zoomedArmWidth + "px";
+  zoomArm.style.height = "auto";
 }
 
 
