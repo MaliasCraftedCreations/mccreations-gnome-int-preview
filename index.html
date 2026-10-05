@@ -176,10 +176,10 @@
    
   <p class="pageSub">The Full Set comes with all 10 arm attachments shown below</p>
 
-   <div id="previewArea" style="position:relative;width:100%;max-width:320px;aspect-ratio:1/1;margin:0 auto 20px auto;">
+  <div id="previewArea" style="position:relative;width:100%;max-width:320px;aspect-ratio:1/1;margin:0 auto 0 auto;">
     <img id="backerPreview"
-         src="https://img1.wsimg.com/isteam/ip/e57bea54-8b62-483e-b4f4-30ae2f7988e3/Backer.png/:/rs=w:740,cg:true,m" alt="Gnome Interchangeable"
-         style="width:100%;height:auto;">
+         src="URL_BACKER_MAIN"
+         style="width:100%;height:auto;display:block;">
     <img id="armPreview"
          src=""
          style="position:absolute;
@@ -189,14 +189,14 @@
                 pointer-events:none;">
   </div>
 
-  <div id="previewTitle" style="text-align:center;margin-top:-10px;line-height:1.3;font-size:15px;margin-bottom:12px;">
-    <div>Sign – <span style="font-weight:700;">Gnome Welcome Sign</span></div>
-    <div>Attachment – <span id="armName" style="font-weight:700;">None</span></div>
-  </div>
-
-     <div id="zoomPreview" style="position:relative;width:100%;max-width:320px;height:120px;margin:0 auto 20px auto;overflow:hidden;border-radius:12px;background:var(--cream);">
+  <div id="zoomPreview" style="position:relative;width:100%;max-width:320px;height:120px;margin:0 auto 12px auto;overflow:hidden;background:var(--cream);">
     <img id="zoomBackerImg" src="" style="position:absolute;">
     <img id="zoomArmImg" src="" style="position:absolute;pointer-events:none;">
+  </div>
+
+  <div id="previewTitle" style="text-align:center;line-height:1.3;font-size:15px;margin-bottom:12px;">
+    <div>Sign – <span style="font-weight:700;">Gnome Welcome Sign</span></div>
+    <div>Attachment – <span id="armName" style="font-weight:700;">None</span></div>
   </div>
 
   <button class="addFullSetBtn" id="actionBtn"></button>
@@ -547,9 +547,15 @@ function updateActionButton() {
    ================================================================ */
 loadCart();
 renderArmGrid();
-selectArm(ARMS[0], null);
 updateActionButton();
 updateCartDisplay();
+
+const backerImgEl = document.getElementById("backerPreview");
+if (backerImgEl.complete) {
+  selectArm(ARMS[0], null);
+} else {
+  backerImgEl.onload = () => selectArm(ARMS[0], null);
+}
 </script>
 </body>
 </html>
