@@ -126,6 +126,27 @@
   p.sectionSub{ text-align:center; font-size:13px; color:var(--brown); margin:0 0 16px; }
 
   .armGrid{ display:flex; flex-wrap:wrap; justify-content:center; gap:16px; }
+     .armAccordionHeader{
+    flex-basis:100%;
+    text-align:center;
+    font-size:13px;
+    font-weight:700;
+    color:var(--terracotta);
+    text-transform:uppercase;
+    letter-spacing:1px;
+    padding:10px 0;
+    cursor:pointer;
+    border-top:1px solid var(--line);
+    margin-top:8px;
+  }
+  .armAccordionBody{
+    flex-basis:100%;
+    display:none;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:16px;
+  }
+  .armAccordionBody.open{ display:flex; }
    .armCard{ width:80px; text-align:center; cursor:pointer; }
 
   @media (max-width: 768px){
@@ -458,28 +479,54 @@ function showToast(msg) {
 function renderArmGrid() {
   const grid = document.getElementById("armGrid");
   grid.innerHTML = "";
-  let lastType = null;
 
-  ARMS.forEach((arm, i) => {
-    if (arm.type !== lastType) {
-      const divider = document.createElement("div");
-      divider.className = "armGroupDivider";
-      divider.textContent = arm.type === "set" ? "Included in the Full Set" : "Individual / Custom Attachments";
-      grid.appendChild(divider);
-      lastType = arm.type;
-    }
+  const setArms = ARMS.filter(a => a.type === "set");
+  const individualArms = ARMS.filter(a => a.type === "individual");
 
+  grid.innerHTML = `
+    <div class="armAccordionHeader open" id="setHeader" onclick="toggleArmSection('setSection', 'setHeader')">
+      Included in the Full Set
+    </div>
+    <div class="armAccordionBody open" id="setSection"></div>
+
+    <div class="armAccordionHeader" id="individualHeader" onclick="toggleArmSection('individualSection', 'individualHeader')">
+      Individual / Custom Attachments
+    </div>
+    <div class="armAccordionBody" id="individualSection"></div>
+  `;
+
+  renderArmCards(setArms, document.getElementById("setSection"), 0);
+  renderArmCards(individualArms, document.getElementById("individualSection"), setArms.length);
+}
+
+function renderArmCards(armList, container, startIndex) {
+  armList.forEach((arm, i) => {
+    const globalIndex = startIndex + i;
     const card = document.createElement("div");
-    card.className = "armCard" + (i === 0 ? " active-arm" : "");
+    card.className = "armCard" + (globalIndex === 0 ? " active-arm" : "");
     const badge = arm.type === "set" ? "Included in Set" : "";
-     card.innerHTML = `
+    card.innerHTML = `
       <img src="${arm.image}" alt="${arm.name}">
       <div class="armCard-label">${arm.name}</div>
       <div class="armCard-price">${badge}</div>
     `;
     card.onclick = () => selectArm(arm, card);
-    grid.appendChild(card);
+    container.appendChild(card);
   });
+}
+
+function toggleArmSection(sectionId, headerId) {
+  const section = document.getElementById(sectionId);
+  const header = document.getElementById(headerId);
+  const isOpen = section.classList.contains("open");
+
+  if (isOpen) {
+    section.classList.remove("open");
+    header.classList.remove("open");
+  } else {
+    section.classList.add("open");
+    header.classList.add("open");
+  }
 }
 
 function selectArm(arm, cardEl) {
