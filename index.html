@@ -87,7 +87,6 @@
 
     .armGroupDivider{
     flex-basis:100%;
-    text-align:center;
     font-size:12px;
     font-weight:700;
     color:var(--black);
@@ -491,10 +490,10 @@ function renderArmGrid() {
   const individualArms = ARMS.filter(a => a.type === "individual");
 
   grid.innerHTML = `
-    <h5 data-title="Included in the Full Set" class="open" id="setHeader" onclick="toggleArmSection('setSection', 'setHeader')" style="flex-basis:100%;justify-content:center;margin:14px 0 8px;cursor:pointer;"></h5>
+    <h5 onclick="toggleArmSection('setSection', this)" data-title="Included in the Full Set" class="open" id="setHeader" style="cursor:pointer;font-size:18px;font-weight:500;margin-top:5px;display:block;width:100%;"></h5>
     <div class="armAccordionBody open" id="setSection"></div>
 
-    <h5 data-title="Individual / Custom Attachments" id="individualHeader" onclick="toggleArmSection('individualSection', 'individualHeader')" style="flex-basis:100%;justify-content:center;margin:14px 0 8px;cursor:pointer;"></h5>
+    <h5 onclick="toggleArmSection('individualSection', this)" data-title="Individual / Custom Attachments" id="individualHeader" style="cursor:pointer;font-size:18px;font-weight:500;margin-top:5px;display:block;width:100%;"></h5>
     <div class="armAccordionBody" id="individualSection"></div>
   `;
 
@@ -525,9 +524,8 @@ function renderArmCards(armList, container) {
   });
 }
 
-function toggleArmSection(sectionId, headerId) {
+function toggleArmSection(sectionId, header) {
   const section = document.getElementById(sectionId);
-  const header = document.getElementById(headerId);
   const isOpen = header.classList.contains("open");
 
   if (isOpen) {
