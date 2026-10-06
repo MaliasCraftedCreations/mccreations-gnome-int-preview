@@ -141,10 +141,13 @@
   }
   .armAccordionBody{
     flex-basis:100%;
-    display:none;
+    display:flex;
     flex-wrap:wrap;
     justify-content:center;
     gap:16px;
+    overflow:hidden;
+    max-height:0;
+    transition:max-height 0.25s ease;
   }
   .armAccordionBody.open{ display:flex; }
    .armCard{ width:80px; text-align:center; cursor:pointer; }
@@ -172,6 +175,10 @@
     font-size:13px; opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:9999; text-align:center;
   }
   .toast.show{ opacity:1; }
+
+   h5.open::before {
+  transform: rotate(90deg) translateY(1px);
+}
 </style>
 </head>
 <body>
@@ -484,26 +491,29 @@ function renderArmGrid() {
   const individualArms = ARMS.filter(a => a.type === "individual");
 
   grid.innerHTML = `
-    <div class="armAccordionHeader open" id="setHeader" onclick="toggleArmSection('setSection', 'setHeader')">
-      Included in the Full Set
-    </div>
+    <h5 data-title="Included in the Full Set" class="open" id="setHeader" onclick="toggleArmSection('setSection', 'setHeader')" style="flex-basis:100%;justify-content:center;margin:14px 0 8px;cursor:pointer;"></h5>
     <div class="armAccordionBody open" id="setSection"></div>
 
-    <div class="armAccordionHeader" id="individualHeader" onclick="toggleArmSection('individualSection', 'individualHeader')">
-      Individual / Custom Attachments
-    </div>
+    <h5 data-title="Individual / Custom Attachments" id="individualHeader" onclick="toggleArmSection('individualSection', 'individualHeader')" style="flex-basis:100%;justify-content:center;margin:14px 0 8px;cursor:pointer;"></h5>
     <div class="armAccordionBody" id="individualSection"></div>
   `;
 
-  renderArmCards(setArms, document.getElementById("setSection"), 0);
-  renderArmCards(individualArms, document.getElementById("individualSection"), setArms.length);
+  // Fill in the triangle headers' visible text (same pattern your door hanger uses)
+  document.getElementById("setHeader").innerHTML = document.getElementById("setHeader").dataset.title;
+  document.getElementById("individualHeader").innerHTML = document.getElementById("individualHeader").dataset.title;
+
+  renderArmCards(setArms, document.getElementById("setSection"));
+  renderArmCards(individualArms, document.getElementById("individualSection"));
+
+  // Open the Set section by default, matching the Everyday-open-by-default behavior
+  const setSection = document.getElementById("setSection");
+  setSection.style.maxHeight = setSection.scrollHeight + "px";
 }
 
-function renderArmCards(armList, container, startIndex) {
+function renderArmCards(armList, container) {
   armList.forEach((arm, i) => {
-    const globalIndex = startIndex + i;
     const card = document.createElement("div");
-    card.className = "armCard" + (globalIndex === 0 ? " active-arm" : "");
+    card.className = "armCard" + (i === 0 && container.id === "setSection" ? " active-arm" : "");
     const badge = arm.type === "set" ? "Included in Set" : "";
     card.innerHTML = `
       <img src="${arm.image}" alt="${arm.name}">
@@ -518,12 +528,14 @@ function renderArmCards(armList, container, startIndex) {
 function toggleArmSection(sectionId, headerId) {
   const section = document.getElementById(sectionId);
   const header = document.getElementById(headerId);
-  const isOpen = section.classList.contains("open");
+  const isOpen = header.classList.contains("open");
 
   if (isOpen) {
+    section.style.maxHeight = "0px";
     section.classList.remove("open");
     header.classList.remove("open");
   } else {
+    section.style.maxHeight = section.scrollHeight + "px";
     section.classList.add("open");
     header.classList.add("open");
   }
