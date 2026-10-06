@@ -85,17 +85,6 @@
   }
   .cartInlineMsg.show{ opacity:1; transform:translateY(0); }
 
-    .armGroupDivider{
-    flex-basis:100%;
-    font-size:12px;
-    font-weight:700;
-    color:var(--black);
-    text-transform:uppercase;
-    letter-spacing:1px;
-    margin:10px 0 2px;
-  }
-
-
   .thumbRow{ display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:12px 0 4px; }
   .thumbRow img{
     width:56px; height:56px; object-fit:contain; background:var(--cream);
@@ -125,19 +114,7 @@
   p.sectionSub{ text-align:center; font-size:13px; color:var(--brown); margin:0 0 16px; }
 
   .armGrid{ display:flex; flex-wrap:wrap; justify-content:center; gap:16px; }
-     .armAccordionHeader{
-    flex-basis:100%;
-    text-align:center;
-    font-size:13px;
-    font-weight:700;
-    color:var(--terracotta);
-    text-transform:uppercase;
-    letter-spacing:1px;
-    padding:10px 0;
-    cursor:pointer;
-    border-top:1px solid var(--line);
-    margin-top:8px;
-  }
+
   .armAccordionBody{
     flex-basis:100%;
     display:flex;
@@ -175,7 +152,31 @@
   }
   .toast.show{ opacity:1; }
 
-   h5.open::before {
+h5[data-title] {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  padding-left: 0;
+  color: #000;
+}
+
+h5[data-title]::before {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 7px solid #000;
+
+  margin-right: 8px;
+  transform: translateY(1px);
+
+  transition: transform 0.2s ease;
+}
+
+h5.open::before {
   transform: rotate(90deg) translateY(1px);
 }
 </style>
