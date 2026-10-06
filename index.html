@@ -491,10 +491,10 @@ function renderArmGrid() {
   const individualArms = ARMS.filter(a => a.type === "individual");
 
   grid.innerHTML = `
-    <h5 onclick="toggleArmSection('setSection', this)" data-title="Included in the Full Set" class="open" id="setHeader" style="cursor:pointer;font-size:18px;font-weight:500;margin-top:5px;display:block;width:100%;"></h5>
+    <h5 onclick="toggleArmSection('setSection', this)" data-title="Included in the Full Set" class="open" id="setHeader" style="cursor:pointer;font-size:18px;font-weight:500;margin-top:5px;display:block;width:100%;text-align:center;justify-content:center;"></h5>
     <div class="armAccordionBody open" id="setSection"></div>
 
-    <h5 onclick="toggleArmSection('individualSection', this)" data-title="Individual / Custom Attachments" id="individualHeader" style="cursor:pointer;font-size:18px;font-weight:500;margin-top:5px;display:block;width:100%;"></h5>
+    <h5 onclick="toggleArmSection('individualSection', this)" data-title="Individual / Custom Attachments" id="individualHeader" style="cursor:pointer;font-size:18px;font-weight:500;margin-top:5px;display:block;width:100%;text-align:center;justify-content:center;"></h5>
     <div class="armAccordionBody" id="individualSection"></div>
   `;
 
