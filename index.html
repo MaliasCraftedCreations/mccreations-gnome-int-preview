@@ -115,6 +115,10 @@
 
   .armGrid{ display:flex; flex-wrap:wrap; justify-content:center; gap:16px; }
 
+     .armGroupWrap{
+    flex-basis:100%;
+  }
+   
   .armAccordionBody{
     flex-basis:100%;
     display:flex;
@@ -491,21 +495,23 @@ function renderArmGrid() {
   const individualArms = ARMS.filter(a => a.type === "individual");
 
   grid.innerHTML = `
-    <h5 onclick="toggleArmSection('setSection', this)" data-title="Included in the Full Set" class="open" id="setHeader" style="cursor:pointer;font-size:18px;font-weight:500;margin-top:5px;display:block;width:100%;text-align:center;justify-content:center;"></h5>
-    <div class="armAccordionBody open" id="setSection"></div>
+    <div class="armGroupWrap">
+      <h5 onclick="toggleArmSection('setSection', this)" data-title="Included in the Full Set" class="open" id="setHeader" style="cursor:pointer;font-size:18px;font-weight:500;margin:10px 0 0;display:block;width:100%;text-align:center;justify-content:center;"></h5>
+      <div class="armAccordionBody open" id="setSection"></div>
+    </div>
 
-    <h5 onclick="toggleArmSection('individualSection', this)" data-title="Individual / Custom Attachments" id="individualHeader" style="cursor:pointer;font-size:18px;font-weight:500;margin-top:5px;display:block;width:100%;text-align:center;justify-content:center;"></h5>
-    <div class="armAccordionBody" id="individualSection"></div>
+    <div class="armGroupWrap">
+      <h5 onclick="toggleArmSection('individualSection', this)" data-title="Individual / Custom Attachments" id="individualHeader" style="cursor:pointer;font-size:18px;font-weight:500;margin:10px 0 0;display:block;width:100%;text-align:center;justify-content:center;"></h5>
+      <div class="armAccordionBody" id="individualSection"></div>
+    </div>
   `;
 
-  // Fill in the triangle headers' visible text (same pattern your door hanger uses)
   document.getElementById("setHeader").innerHTML = document.getElementById("setHeader").dataset.title;
   document.getElementById("individualHeader").innerHTML = document.getElementById("individualHeader").dataset.title;
 
   renderArmCards(setArms, document.getElementById("setSection"));
   renderArmCards(individualArms, document.getElementById("individualSection"));
 
-  // Open the Set section by default, matching the Everyday-open-by-default behavior
   const setSection = document.getElementById("setSection");
   setSection.style.maxHeight = setSection.scrollHeight + "px";
 }
